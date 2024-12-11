@@ -22,6 +22,26 @@ export const formReducer = (
     action: FormAction
 ): FormState => {
     switch (action.type) {
+        case "SET_FIELD_VALUE":
+            return {
+                ...state,
+                values: {
+                    ...state.values,
+                    [action.payload?.fieldId || ""]: action.payload?.value || "",
+                },
+                errors: {
+                    ...state.errors,
+                    [action.payload?.fieldId || ""]: null,
+                },
+            };
+        case "SET_ERROR":
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    [action.payload?.fieldId || ""]: action.payload?.error || "",
+                },
+            };
         default:
             return state;
     }
