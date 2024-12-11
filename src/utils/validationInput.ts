@@ -1,4 +1,4 @@
-import { FieldConfig } from "../components/common/inputfield";
+import { FieldConfig } from "components/common/inputfield";
 
 export const validateField = (
     field: FieldConfig,
