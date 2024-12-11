@@ -13,26 +13,33 @@ interface DynamicFormProps {
 const DynamicForm: React.FC<DynamicFormProps> = ({ config }) => {
     const { state, dispatch } = useFormContext();
 
-    const handleChange = (fieldId: string, value: string | boolean) => {
-        dispatch({
-            type: "SET_FIELD_VALUE",
-            payload: { fieldId, value },
-        });
-    };
+    const visibleFields = React.useMemo(
+        () =>
+            config.fields.filter((field) => {
+                if (!field.visibleIf) return true;
+                const dependentValue = state.values[field.visibleIf.field];
+                return (
+                    typeof dependentValue === "string" &&
+                    field.visibleIf.value.includes(dependentValue)
+                );
+            }),
+        [config.fields, state.values]
+    );
 
-    const isVisible = (field: FieldConfig): boolean => {
-        if (!field.visibleIf) return true;
-        const dependentValue = state.values[field.visibleIf.field];
-        return (
-            typeof dependentValue === "string" &&
-            field.visibleIf.value.includes(dependentValue)
-        );
-    };
+    const handleChange = React.useCallback(
+        (fieldId: string, value: string | boolean) => {
+            dispatch({
+                type: "SET_FIELD_VALUE",
+                payload: { fieldId, value },
+            });
+        },
+        [dispatch]
+    );
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const isValid = config.fields.every((field) =>
-            validateField(field, state.values[field.id], isVisible, dispatch)
+            validateField(field, state.values[field.id], () => true, dispatch)
         );
 
         if (isValid) {
@@ -71,22 +78,17 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ config }) => {
                     </Typography>
                     <form onSubmit={handleSubmit} data-testid="form-element">
                         <Grid container spacing={2}>
-                            {config.fields.map((field) =>
-                                isVisible(field) ? (
-                                    <Grid item xs={12} key={field.id}>
-                                        <InputField
-                                            field={field}
-                                            value={
-                                                state.values[field.id] ||
-                                                (field.type === "checkbox" ? false : "")
-                                            }
-                                            onChange={handleChange}
-                                            visible={isVisible(field)}
-                                            error={state.errors[field.id] || undefined}
-                                        />
-                                    </Grid>
-                                ) : null
-                            )}
+                            {visibleFields.map((field) => (
+                                <Grid item xs={12} key={field.id}>
+                                    <InputField
+                                        field={field}
+                                        value={state.values[field.id] || ""}
+                                        onChange={handleChange}
+                                        visible={true}
+                                        error={state.errors[field.id] || undefined}
+                                    />
+                                </Grid>
+                            ))}
                         </Grid>
                         <Box
                             sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}
