@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, Card, CardContent, Button, Typography } from "@mui/material";
-import InputField, { FieldConfig, FormConfig } from "components/common/inputfield";
+import InputField from "components/common/inputfield";
 import Grid from "@mui/material/Grid";
 import { validateField } from "utils/validationInput";
 import { useFormContext } from "contexts/formContext";
+import { FieldConfig, FormConfig } from "types";
 
 interface DynamicFormProps {
     config: FormConfig;

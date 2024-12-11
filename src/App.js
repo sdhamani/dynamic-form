@@ -1,6 +1,6 @@
 import './App.css';
-import formConfig from './config/sampleFormConfig.json';
-import DynamicForm from './components/dynamicForm';
+import formConfig from 'config/sampleFormConfig.json';
+import DynamicForm from 'components/dynamicForm';
 
 
 function App() {
