@@ -37,7 +37,7 @@ const InputField: React.FC<InputFieldProps> = React.memo(({
             error: !!error,
             helperText: error || "",
         }),
-        [field.label, value, onChange, error]
+        [field.id, field.label, value, onChange, error]
     );
 
     const renderInput = React.useCallback(() => {
