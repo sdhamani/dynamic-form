@@ -69,7 +69,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ config }) => {
                     <Typography variant="h4" component="h1" align="center" gutterBottom>
                         {config.title}
                     </Typography>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} data-testid="form-element">
                         <Grid container spacing={2}>
                             {config.fields.map((field) =>
                                 isVisible(field) ? (
