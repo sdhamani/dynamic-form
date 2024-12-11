@@ -41,7 +41,7 @@ const InputField: React.FC<InputFieldProps> = ({
         switch (field.type) {
             case "text":
             case "email":
-                return <TextField {...sharedProps} required={field.required} />;
+                return <TextField {...sharedProps} required={field.required} type="email" />;
             case "dropdown":
                 return (
                     <FormControl fullWidth variant="outlined" error={!!error}>
