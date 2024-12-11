@@ -40,6 +40,7 @@ const InputField: React.FC<InputFieldProps> = ({
     const renderInput = () => {
         switch (field.type) {
             case "text":
+                return <TextField {...sharedProps} required={field.required} type="text" />;
             case "email":
                 return <TextField {...sharedProps} required={field.required} type="email" />;
             case "dropdown":
