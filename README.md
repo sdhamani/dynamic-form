@@ -1,70 +1,176 @@
-# Getting Started with Create React App
+# Dynamic Survey Form Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a dynamic survey form built using React, Material-UI, and TypeScript. The application provides a customizable form structure based on a JSON configuration, making it easy to adapt to various survey requirements without modifying the underlying code.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Dynamic rendering of form fields based on the provided JSON configuration.
+- Support for various input types, including text, email, dropdown, textarea, radio buttons, and checkboxes.
+- Validation rules, including regex patterns and conditional visibility for fields.
+- Displays user-friendly error messages for invalid inputs.
+- Integration with a custom state management solution using React Context and Reducers.
+- Unit testing using Jest and React Testing Library.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Sample JSON Configuration
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Below is an example JSON configuration for an insurance products survey:
 
-### `npm test`
+```json
+{
+  "title": "Insurance Products Survey",
+  "fields": [
+    {
+      "type": "text",
+      "label": "Full Name",
+      "id": "fullName",
+      "required": true,
+      "regex": "^[a-zA-Z ]{2,50}$",
+      "errorMessage": "Full Name must only contain letters and be 2-50 characters long."
+    },
+    {
+      "type": "email",
+      "label": "Email Address",
+      "id": "email",
+      "required": true,
+      "regex": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+      "errorMessage": "Please enter a valid email address."
+    },
+    {
+      "type": "dropdown",
+      "label": "Which type of insurance product are you most interested in?",
+      "id": "insuranceType",
+      "options": [
+        "Health Insurance",
+        "Car Insurance",
+        "Life Insurance",
+        "Home Insurance"
+      ],
+      "required": true
+    },
+    {
+      "type": "dropdown",
+      "label": "Do you currently have an active insurance policy?",
+      "id": "activePolicy",
+      "options": ["Yes", "No"],
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "If yes, please specify your current insurance provider:",
+      "id": "currentProvider",
+      "required": false,
+      "regex": "^[a-zA-Z0-9 ]{2,50}$",
+      "errorMessage": "Provider name must only contain alphanumeric characters and be 2-50 characters long.",
+      "visibleIf": {
+        "field": "activePolicy",
+        "value": ["Yes"]
+      }
+    },
+    {
+      "type": "textarea",
+      "label": "What features do you look for when choosing an insurance policy?",
+      "id": "policyFeatures",
+      "required": true,
+      "regex": "^.{10,500}$",
+      "errorMessage": "Please provide at least 10 characters describing the features you look for."
+    },
+    {
+      "type": "dropdown",
+      "label": "How would you rate your overall satisfaction with your current insurance provider?",
+      "id": "satisfaction",
+      "options": [
+        "Very Satisfied",
+        "Satisfied",
+        "Neutral",
+        "Dissatisfied",
+        "Very Dissatisfied"
+      ],
+      "required": true,
+      "visibleIf": {
+        "field": "activePolicy",
+        "value": ["Yes"]
+      }
+    },
+    {
+      "type": "radio",
+      "label": "What is your preferred contact method?",
+      "id": "contactMethod",
+      "options": ["Email", "Phone", "SMS"],
+      "required": true
+    },
+    {
+      "type": "textarea",
+      "label": "Please provide any additional comments or feedback:",
+      "id": "additionalComments",
+      "required": false,
+      "regex": "^.{0,1000}$",
+      "errorMessage": "Feedback must not exceed 1000 characters."
+    },
+    {
+      "type": "checkbox",
+      "label": "Do you agree to the terms and conditions?",
+      "id": "agreeTerms",
+      "required": true,
+      "errorMessage": "You must accept the terms and conditions to proceed."
+    }
+  ]
+}
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Node.js** (>=16.x.x)
+- **npm** or **yarn**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Steps
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Clone the repository**:
 
-### `npm run eject`
+   ```bash
+   git clone https://github.com/your-repo/dynamic-survey-form.git
+   cd dynamic-survey-form
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. **Install dependencies:**:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   or
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   yarn install
+   ```
 
-## Learn More
+3. **Start the development server::**:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```bash
+   npm start
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   Or
 
-### Code Splitting
+   yarn start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. **Access the application: Open your browser and navigate to:::**:
 
-### Analyzing the Bundle Size
+   ```bash
+   http://localhost:3000
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Running Tests
 
-### Making a Progressive Web App
+This project includes unit tests for components and utilities.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Run all tests
 
-### Advanced Configuration
+```bash
+npm test
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+or
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+yarn test
+```
