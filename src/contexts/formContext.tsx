@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { formReducer, initialFormState } from "reducers/formReducer";
 
-const FormContext = createContext<any>(null);
+export const FormContext = createContext<any>(null);
 
 export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
