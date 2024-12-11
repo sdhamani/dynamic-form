@@ -17,7 +17,7 @@ export const initialFormState: FormState = {
     errors: {},
 };
 
-export const formReducer = (state = initialFormState, action: any) => {
+export const formReducer = (state = initialFormState, action: FormAction) => {
     switch (action.type) {
         case "SET_FIELD_VALUE":
             return {
