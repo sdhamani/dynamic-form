@@ -4,7 +4,7 @@ import InputField from "components/common/inputfield";
 import Grid from "@mui/material/Grid";
 import { validateField } from "utils/validationInput";
 import { useFormContext } from "contexts/formContext";
-import { FieldConfig, FormConfig } from "types";
+import { FormConfig } from "types";
 
 interface DynamicFormProps {
     config: FormConfig;
