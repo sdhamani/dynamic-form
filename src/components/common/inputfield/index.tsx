@@ -1,0 +1,148 @@
+import React from "react";
+import {
+    TextField,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    FormHelperText,
+    Collapse,
+    Box,
+    FormControlLabel,
+    Checkbox,
+    RadioGroup,
+    Radio,
+    Typography,
+} from "@mui/material";
+
+export interface FieldConfig {
+    type: string;
+    label: string;
+    id: string;
+    required?: boolean;
+    regex?: string;
+    errorMessage?: string;
+    options?: string[];
+    visibleIf?: {
+        field: string;
+        value: string[];
+    };
+}
+
+export interface FormConfig {
+    title: string;
+    fields: FieldConfig[];
+}
+
+interface InputFieldProps {
+    field: FieldConfig;
+    value: string | boolean;
+    onChange: (fieldId: string, value: string | boolean) => void;
+    visible: boolean;
+    error?: string | null;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
+    field,
+    value,
+    onChange,
+    visible,
+    error,
+}) => {
+    if (!visible) return null;
+
+    const sharedProps = {
+        fullWidth: true,
+        variant: "outlined" as const,
+        label: field.label,
+        value: typeof value === "string" ? value : "",
+        onChange: (e: React.ChangeEvent<HTMLInputElement | { value: unknown }>) =>
+            onChange(field.id, e.target.value as string),
+        error: !!error,
+        helperText: error || "",
+    };
+
+    const renderInput = () => {
+        switch (field.type) {
+            case "text":
+            case "email":
+                return <TextField {...sharedProps} required={field.required} />;
+            case "dropdown":
+                return (
+                    <FormControl fullWidth variant="outlined" error={!!error}>
+                        <InputLabel>{field.label}</InputLabel>
+                        <Select
+                            value={typeof value === "string" ? value : ""}
+                            onChange={(e) => onChange(field.id, e.target.value as string)}
+                            label={field.label}
+                        >
+                            {field.options?.map((option) => (
+                                <MenuItem key={option} value={option}>
+                                    {option}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{error || ""}</FormHelperText>
+                    </FormControl>
+                );
+            case "textarea":
+                return (
+                    <TextField
+                        {...sharedProps}
+                        multiline
+                        minRows={4}
+                        required={field.required}
+                    />
+                );
+            case "checkbox":
+                return (
+                    <Box>
+                        <FormControl error={!!error} component="fieldset">
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={Boolean(value)}
+                                        onChange={(e) => onChange(field.id, e.target.checked)}
+                                    />
+                                }
+                                label={field.label}
+                            />
+                            {error && <FormHelperText>{error}</FormHelperText>}
+                        </FormControl>
+                    </Box>
+                );
+            case "radio":
+                return (
+                    <FormControl component="fieldset" error={!!error}>
+                        <Typography sx={{ marginBottom: 1 }}>{field.label}</Typography>
+                        <RadioGroup
+                            value={typeof value === "string" ? value : ""}
+                            onChange={(e) => onChange(field.id, e.target.value)}
+                        >
+                            {field.options?.map((option) => (
+                                <FormControlLabel
+                                    key={option}
+                                    value={option}
+                                    control={<Radio />}
+                                    label={option}
+                                />
+                            ))}
+                        </RadioGroup>
+                        {error && <FormHelperText>{error}</FormHelperText>}
+                    </FormControl>
+                );
+            default:
+                return null;
+        }
+    };
+
+    if (!visible) return null;
+
+    return (
+        <Collapse in={visible} timeout={300} unmountOnExit>
+            <Box sx={{ paddingY: 1.5 }}>{renderInput()}</Box>
+        </Collapse>
+    );
+};
+
+export default InputField;
