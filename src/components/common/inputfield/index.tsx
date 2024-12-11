@@ -17,27 +17,30 @@ import {
 
 import { InputFieldProps } from "types";
 
-const InputField: React.FC<InputFieldProps> = ({
+const InputField: React.FC<InputFieldProps> = React.memo(({
     field,
     value,
     onChange,
     visible,
     error,
 }) => {
-    if (!visible) return null;
+    console.log("field", field.type)
 
-    const sharedProps = {
-        fullWidth: true,
-        variant: "outlined" as const,
-        label: field.label,
-        value: typeof value === "string" ? value : "",
-        onChange: (e: React.ChangeEvent<HTMLInputElement | { value: unknown }>) =>
-            onChange(field.id, e.target.value as string),
-        error: !!error,
-        helperText: error || "",
-    };
+    const sharedProps = React.useMemo(
+        () => ({
+            fullWidth: true,
+            variant: "outlined" as const,
+            label: field.label,
+            value: typeof value === "string" ? value : "",
+            onChange: (e: React.ChangeEvent<HTMLInputElement | { value: unknown }>) =>
+                onChange(field.id, e.target.value as string),
+            error: !!error,
+            helperText: error || "",
+        }),
+        [field.label, value, onChange, error]
+    );
 
-    const renderInput = () => {
+    const renderInput = React.useCallback(() => {
         switch (field.type) {
             case "text":
                 return <TextField {...sharedProps} required={field.required} type="text" />;
@@ -110,8 +113,7 @@ const InputField: React.FC<InputFieldProps> = ({
             default:
                 return null;
         }
-    };
-
+    }, [field, sharedProps, value, onChange, error]);
     if (!visible) return null;
 
     return (
@@ -119,6 +121,6 @@ const InputField: React.FC<InputFieldProps> = ({
             <Box sx={{ paddingY: 1.5 }}>{renderInput()}</Box>
         </Collapse>
     );
-};
+});
 
 export default InputField;
